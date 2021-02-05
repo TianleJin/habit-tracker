@@ -1,0 +1,27 @@
+{% extends 'entry.html' %}
+
+{% block head %}
+    {{ super() }}
+{% endblock head %}
+
+{% block content %} 
+    <form action="/register" method="post">
+        <h2>Register a New Account</h2>
+        <hr>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="username" placeholder="Your username">
+        </div>
+        <div class="input-group mb-3">
+            <input type="password" class="form-control" name="password" placeholder="Your password" data-toggle="password">
+        </div>
+        <div class="input-group mb-3" id="show_hide_confirm_password">
+            <input type="password" class="form-control" name="confirm" placeholder="Confirm password" data-toggle="password">
+        </div>
+        <div class="input-group mb-3">
+            <button class="submit-btn" type="submit">Sign up</button>
+        </div>
+        <small class="form-text text-muted">
+            Already have an account? Sign in <a href="{{ url_for('login') }}">Here</a>.
+        </small>
+    </form>
+{% endblock content %}
