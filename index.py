@@ -15,7 +15,7 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        flash('Your username or password is incorrect.')
+        # flash('Your username or password is incorrect.')
         session['username'] = request.form['username']
         return redirect(url_for('home'))
     return render_template('login.html')
@@ -28,6 +28,11 @@ def register():
         session['username'] = request.form['username']
         return redirect(url_for('home'))
     return render_template('register.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)

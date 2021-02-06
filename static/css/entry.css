@@ -24,10 +24,10 @@ form {
 .submit-btn {
     width: 100%;
     background-image: url('../img/login_background.jpg');
+    background-size: cover;
     color: white;
     border: none;
     outline: none;
-    background-size: cover;
     text-align: center;
     text-decoration: none;
     font-size: 16px;
