@@ -1,14 +1,21 @@
 {% extends 'entry.html' %}
 
 {% block content %} 
-    <form action="/register" method="post">
+    <form action="{{ url_for('register') }}" method="post">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-danger" role="alert">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
         <h2>Register a New Account</h2>
         <hr>
         <div class="input-group mb-3">
-            <input type="text" class="form-control" name="username" placeholder="Your username">
+            <input type="text" class="form-control" name="username" placeholder="New username">
         </div>
         <div class="input-group mb-3">
-            <input type="password" class="form-control" name="password" placeholder="Your password" data-toggle="password">
+            <input type="password" class="form-control" name="password" placeholder="Password" data-toggle="password">
         </div>
         <div class="input-group mb-3" id="show_hide_confirm_password">
             <input type="password" class="form-control" name="confirm" placeholder="Confirm password" data-toggle="password">
