@@ -2,26 +2,49 @@
 
 {% block content %}
     <form action="{{ url_for('login') }}" method="post">
-        {% with messages = get_flashed_messages() %}
+        {{ form.hidden_tag() }}
+        {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
-                <div class="alert alert-danger" role="alert">
-                    {{ messages[0] }}
-                </div>
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             {% endif %}
         {% endwith %}
-        <h2>Welcome to Habit Tracker</h2>
-        <hr>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" name="username" placeholder="Enter username">
-        </div>
-        <div class="input-group mb-3">
-            <input type="password" class="form-control" name="password" placeholder="Enter password">
-        </div>
-        <div class="input-group mb-3">
-            <button class="submit-btn" type="submit">Sign in</button>
+        <fieldset class="form-group"> 
+            <h1>Welcome to Habit Tracker</h1>
+            <hr>
+            <div class="form-group">
+                {% if form.username.errors %}
+                    {{ form.username(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {{ form.username.errors[0] }}
+                    </div>
+                {% else %}  
+                    {{ form.username(class="form-control form-control-lg", placeholder='Enter username')}}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {% if form.password.errors %}
+                    {{ form.password(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {{ form.password.errors[0] }}
+                    </div>
+                {% else %}  
+                    {{ form.password(class="form-control form-control-lg", placeholder='Enter password')}}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.remember(class="form-check-input") }} 
+                {{ form.remember.label(class="form-check-label") }}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="submit-btn")}}
         </div>
         <small class="form-text text-muted">
             Don't have an account? Sign up <a href="{{ url_for('register') }}">Here</a>.
         </small>
-  </form>
+    </form>
 {% endblock content %}

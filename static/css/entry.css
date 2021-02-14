@@ -6,6 +6,7 @@ html, body {
 
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-image: url('../img/login_background.jpg');
@@ -14,6 +15,7 @@ body {
 
 form {
     min-width: 40%;
+    max-width: 80%;
     display: block;
     text-align: center;
     background-color: white;
