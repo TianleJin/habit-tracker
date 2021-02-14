@@ -9,7 +9,7 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
-    submit = SubmitField('Login')
+    submit = SubmitField('Log In')
 
     def validate_username(self, username):
         conn = sqlite3.connect(db_path)
@@ -27,7 +27,7 @@ class RegistrationForm(FlaskForm):
         EqualTo('confirm', message='Your passwords do not match.')
     ])
     confirm = PasswordField('Confirm', validators=[DataRequired()])
-    submit = SubmitField('Login')
+    submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
         conn = sqlite3.connect(db_path)
