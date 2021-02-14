@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask import render_template, redirect, url_for, request, flash, get_flashed_messages, session
 import sqlite3
@@ -8,10 +9,11 @@ from users import User
 db_path = 'app.db'
 
 app = Flask(__name__)
-app.secret_key = 'abcdefghijklmnopqrstuvwxyz'
+app.secret_key = os.environ['HABIT_TRACKER_SECRET_KEY']
 
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
+login_manager.login_message_category = "danger"
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -26,6 +28,7 @@ def index():
     return redirect(url_for('login'))
 
 @app.route('/home')
+@login_required
 def home():
     return render_template('home.html')
 
@@ -38,10 +41,12 @@ def login():
         conn = sqlite3.connect(db_path)
         cur = conn.cursor()
         cur.execute("SELECT * FROM user WHERE username = ?", (form.username.data, ))
-        user = list(cur.fetchone())
-        us = load_user(user[0])
-        if form.password.data == us.password:
-            login_user(us, remember=form.remember.data)
+        res = list(cur.fetchone())
+        user = load_user(res[0])
+        if form.password.data == user.password:
+            login_user(user, remember=form.remember.data)
+            # print(session.keys())
+            # print(form.remember.data)
             return redirect(url_for('home'))
         else:
             flash('Your username or password is incorrect.', category='danger')
@@ -63,8 +68,10 @@ def register():
     return render_template('register.html', title="Register", form=form)
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
+    print(session.keys())
     return redirect(url_for('login'))
 
 

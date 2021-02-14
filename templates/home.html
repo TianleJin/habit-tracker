@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
     <div style="margin: 20px;">
-        <!-- <h1>Welcome {{ session['username'] }}!</h1> -->
+        <h1>Welcome {{ current_user.username }}!</h1>
+        <p>Authenticated: {{ current_user.is_authenticated }}</p>
+        <p>Anonymous: {{ current_user.is_anonymous }}</p>
+        <p>Id: {{ current_user.get_id() }}</p>
     </div>
 {% endblock content %}
