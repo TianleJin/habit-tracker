@@ -6,3 +6,10 @@
 .main-area {
     margin: 40px 10%;
 }
+
+.box {
+    display: block;
+    text-align: center;
+    color: #495057;
+    padding: 3em;
+}

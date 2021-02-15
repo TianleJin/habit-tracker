@@ -1,38 +1,4 @@
-.box {
-    display: block;
-    text-align: center;
-    color: #495057;
-    padding: 3em;
-}
-
-.border-decoration {
-    border: 1px solid rgba(0,0,0,.1);
-}
-
-.submit-btn {
-    width: 100%;
-    background-image: url('../img/login_background.jpg');
-    background-size: cover;
+.alert-primary {
     color: white;
-    border: none;
-    outline: none;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 10px 32px;
-    border-radius: 25px;
-}
-
-.submit-btn:hover, .submit-btn:focus {
-    border: none;
-    outline: none;
-    background-image: none;
-}
-
-.submit-btn:hover {
-    background-color:mediumpurple;
-}
-
-.submit-btn:focus {
-    background-color: blueviolet;
+    background: rgba(225, 48, 108, 0.6);
 }
