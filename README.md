@@ -1,2 +1,2 @@
 # Habit-Tracker
-An application which helps users with developing and tracking their habits.
+A web application which helps users develop and track their habits.
