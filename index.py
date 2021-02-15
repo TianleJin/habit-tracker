@@ -28,11 +28,6 @@ def load_user(user_id):
 def index():
     return redirect(url_for('login'))
 
-@app.route('/home')
-@login_required
-def home():
-    return render_template('home.html')
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -73,6 +68,26 @@ def logout():
     logout_user()
     print(session.keys())
     return redirect(url_for('login'))
+
+@app.route('/home')
+@login_required
+def home():
+    return render_template('home.html')
+
+@app.route('/add')
+@login_required
+def add():
+    return render_template('add.html')
+
+@app.route('/progress')
+@login_required
+def progress():
+    return render_template('progress.html')
+
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html')
 
 
 if __name__ == '__main__':
