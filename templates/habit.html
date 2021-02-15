@@ -2,7 +2,7 @@
 
 {% block head %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/add.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/habit.css') }}">
 {% endblock head %}
 
 {% block content %}
@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <form class="box" action="{{ url_for('add') }}" method="post">
+                    <form class="box" action="{{ url_for('habit') }}" method="post">
                         {{ form.hidden_tag() }}
                         <fieldset class="form-group"> 
                             <h1>Add Habit</h1>

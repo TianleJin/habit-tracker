@@ -75,9 +75,9 @@ def logout():
 def home():
     return render_template('home.html')
 
-@app.route('/add', methods=['GET', 'POST'])
+@app.route('/habit', methods=['GET', 'POST'])
 @login_required
-def add():
+def habit():
     form = HabitForm()
     if form.validate_on_submit():
         conn = sqlite3.connect(db_path)
@@ -86,14 +86,14 @@ def add():
         (form.name.data, form.description.data, current_user.user_id))
         conn.commit()
         flash(f'Your habit "{form.name.data}" has been added.', category='success')
-        return redirect(url_for('add'))
+        return redirect(url_for('habit'))
 
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     cur.execute(f'SELECT * FROM {habit_table} WHERE user_id = ?', (current_user.user_id, ))
     habits = cur.fetchall()
     habits = [] if habits is None else list(habits)
-    return render_template('add.html', title='Add', form=form, habits=habits)
+    return render_template('habit.html', title='Habits', form=form, habits=habits)
 
 @app.route('/progress')
 @login_required
