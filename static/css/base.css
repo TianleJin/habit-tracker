@@ -2,3 +2,7 @@
     background-image: url('../img/login_background.jpg');
     background-size: cover;
 }
+
+.main-area {
+    margin: 40px 10%;
+}

@@ -1,13 +1,18 @@
 import os
+import sqlite3
 from flask import Flask
 from flask import render_template, redirect, url_for, request, flash, get_flashed_messages, session
-import sqlite3
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
-from forms import LoginForm, RegistrationForm
 from werkzeug.security import generate_password_hash, check_password_hash
-from users import User
+
+from models.loginForm import LoginForm
+from models.registrationForm import RegistrationForm
+from models.habitForm import HabitForm
+from models.user import User
 
 db_path = 'app.db'
+user_table = 'user'
+habit_table = 'habit'
 
 app = Flask(__name__)
 app.secret_key = os.environ['HABIT_TRACKER_SECRET_KEY']
@@ -20,7 +25,7 @@ login_manager.login_message_category = "danger"
 def load_user(user_id):
     conn = sqlite3.connect(db_path)
     curs = conn.cursor()
-    curs.execute("SELECT * from user where user_id = ?", (user_id, ))
+    curs.execute(f'SELECT * from {user_table} where user_id = ?', (user_id, ))
     lu = curs.fetchone()
     return None if lu is None else User(int(lu[0]), lu[1], lu[2])
 
@@ -36,7 +41,7 @@ def login():
     if form.validate_on_submit():
         conn = sqlite3.connect(db_path)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM user WHERE username = ?", (form.username.data, ))
+        cur.execute(f'SELECT * FROM {user_table} WHERE username = ?', (form.username.data, ))
         res = list(cur.fetchone())
         user = load_user(res[0])
         if check_password_hash(user.password, form.password.data):
@@ -53,20 +58,16 @@ def register():
         conn = sqlite3.connect(db_path)
         cur = conn.cursor()
         hsh = generate_password_hash(form.password.data, 'sha256')
-        cur.execute('INSERT INTO user (username, password) VALUES (?, ?);', (form.username.data, hsh))
+        cur.execute(f'INSERT INTO {user_table} (username, password) VALUES (?, ?);', (form.username.data, hsh))
         conn.commit()
-        # use this code to check if user was inserted correctly
-        # cur.execute('SELECT * FROM user;')
-        # print(cur.fetchall())
         flash('Your account has been created.', category='success')
         return redirect(url_for('login'))
-    return render_template('register.html', title="Register", form=form)
+    return render_template('register.html', title='Register', form=form)
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    print(session.keys())
     return redirect(url_for('login'))
 
 @app.route('/home')
@@ -74,10 +75,19 @@ def logout():
 def home():
     return render_template('home.html')
 
-@app.route('/add')
+@app.route('/add', methods=['GET', 'POST'])
 @login_required
 def add():
-    return render_template('add.html')
+    form = HabitForm()
+    if form.validate_on_submit():
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+        cur.execute(f'INSERT INTO {habit_table} (name, description, user_id) VALUES (?, ?, ?);', 
+        (form.name.data, form.description.data, current_user.user_id))
+        conn.commit()
+        flash(f'Your habit "{form.name.data}" has been added.', category='success')
+        return redirect(url_for('add'))
+    return render_template('add.html', title='Add', form=form)
 
 @app.route('/progress')
 @login_required
