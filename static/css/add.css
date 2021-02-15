@@ -1,12 +1,16 @@
-.habit-form {
+.box {
     display: block;
     text-align: center;
     color: #495057;
     padding: 3em;
 }
 
+.border-decoration {
+    border: 1px solid rgba(0,0,0,.1);
+}
+
 .submit-btn {
-    width: 50%;
+    width: 100%;
     background-image: url('../img/login_background.jpg');
     background-size: cover;
     color: white;

@@ -87,7 +87,13 @@ def add():
         conn.commit()
         flash(f'Your habit "{form.name.data}" has been added.', category='success')
         return redirect(url_for('add'))
-    return render_template('add.html', title='Add', form=form)
+
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute(f'SELECT * FROM {habit_table} WHERE user_id = ?', (current_user.user_id, ))
+    habits = cur.fetchall()
+    habits = [] if habits is None else list(habits)
+    return render_template('add.html', title='Add', form=form, habits=habits)
 
 @app.route('/progress')
 @login_required
