@@ -4,6 +4,7 @@ from flask import render_template, redirect, url_for, request, flash, get_flashe
 import sqlite3
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from forms import LoginForm, RegistrationForm
+from werkzeug.security import generate_password_hash, check_password_hash
 from users import User
 
 db_path = 'app.db'
@@ -43,10 +44,8 @@ def login():
         cur.execute("SELECT * FROM user WHERE username = ?", (form.username.data, ))
         res = list(cur.fetchone())
         user = load_user(res[0])
-        if form.password.data == user.password:
+        if check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
-            # print(session.keys())
-            # print(form.remember.data)
             return redirect(url_for('home'))
         else:
             flash('Your username or password is incorrect.', category='danger')
@@ -58,7 +57,8 @@ def register():
     if form.validate_on_submit():
         conn = sqlite3.connect(db_path)
         cur = conn.cursor()
-        cur.execute('INSERT INTO user (username, password) VALUES (?, ?);', (form.username.data, form.password.data))
+        hsh = generate_password_hash(form.password.data, 'sha256')
+        cur.execute('INSERT INTO user (username, password) VALUES (?, ?);', (form.username.data, hsh))
         conn.commit()
         # use this code to check if user was inserted correctly
         # cur.execute('SELECT * FROM user;')
