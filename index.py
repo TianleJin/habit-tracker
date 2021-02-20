@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from flask import Flask
-from flask import render_template, redirect, url_for, request, flash, get_flashed_messages, session
+from flask import render_template, redirect, url_for, make_response, request, flash, get_flashed_messages, session
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -75,15 +75,27 @@ def logout():
 def home():
     return render_template('home.html')
 
-@app.route('/habit', methods=['GET', 'POST'])
+@app.route('/habit', methods=['GET'])
+@app.route('/habit/<habit_id>', methods=['DELETE'])
 @login_required
-def habit():
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-    cur.execute(f'SELECT * FROM {habit_table} WHERE user_id = ?', (current_user.user_id, ))
-    habits = cur.fetchall()
-    habits = [] if habits is None else list(habits)
-    return render_template('habit.html', title='Habits', habits=habits)
+def habit(habit_id=None):
+    if request.method == 'GET':
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+        cur.execute(f'SELECT * FROM {habit_table} WHERE user_id = ?', (current_user.user_id, ))
+        habits = cur.fetchall()
+        habits = [] if habits is None else list(habits)
+        return render_template('habit.html', title='Habits', habits=habits)
+    elif request.method == 'DELETE':
+        try:
+            conn = sqlite3.connect(db_path)
+            cur = conn.cursor()
+            cur.execute(f'DELETE FROM {habit_table} WHERE user_id = ? AND habit_id = ?', (current_user.get_id(), habit_id))
+            conn.commit()
+            return make_response('success', 200)
+        except:
+            conn.rollback()
+            return make_response('failure', 404)
 
 @app.route('/add', methods=['GET', 'POST'])
 @login_required

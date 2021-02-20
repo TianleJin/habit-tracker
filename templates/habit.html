@@ -11,16 +11,17 @@
             <h1>Your Habits</h1>
             <hr>
             {% for habit_id, habit_name, habit_desc, user_id in habits %}
-                <div class="habit-item">
+                <div id="habit-{{ habit_id }}" class="habit-item">
                     {{ habit_name }}
-                    <button class="btn btn-light btn-right"><i class="fa fa-trash"></i></button>
-                    <button class="btn btn-light btn-right"><i class="fa fa-info"></i></button>
+                    <button onclick="removeHabit( '{{ habit_id }}', '{{ habit_name }}')" class="btn btn-light right"><i class="fa fa-trash"></i></button>
+                    <button class="btn btn-light right"><i class="fa fa-info"></i></button>
                 </div>
             {% endfor %}
         </div>
     </div>
 {% endblock content %}
 
-{% block script %}
+{% block scripts %}
     {{ super() }}
-{% endblock script %}
+    <script src="{{ url_for('static', filename='js/habit.js') }}"></script>
+{% endblock scripts %}
