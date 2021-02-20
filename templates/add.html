@@ -6,8 +6,8 @@
 {% endblock head %}
 ]
 {% block content %}
-<div class="main-area">
-    <form class="box" action="{{ url_for('add') }}" method="post">
+<div class="outer">
+    <form class="inner" action="{{ url_for('add') }}" method="post">
         {{ form.hidden_tag() }}
         <fieldset class="form-group"> 
             <h1>Add Habit</h1>

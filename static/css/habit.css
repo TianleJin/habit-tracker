@@ -1,4 +1,14 @@
-.alert-primary {
+.habit-item {
     color: white;
     background: rgba(225, 48, 108, 0.6);
+    padding: 0.5em 0;
+    margin-bottom: 0.5em;
+    font-size: 1.5em;
 }
+
+.btn-right {
+    float: right;
+    margin-right: 1em;
+    width: 2.5em;
+}
+

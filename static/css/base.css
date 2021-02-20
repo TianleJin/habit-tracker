@@ -3,11 +3,11 @@
     background-size: cover;
 }
 
-.main-area {
+.outer {
     margin: 40px 10%;
 }
 
-.box {
+.inner {
     display: block;
     text-align: center;
     color: #495057;

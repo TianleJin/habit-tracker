@@ -6,23 +6,17 @@
 {% endblock head %}
 
 {% block content %}
-    <div class="main-area">
-        <div class="box">
+    <div class="outer">
+        <div class="inner">
             <h1>Your Habits</h1>
             <hr>
-            <div class="habit-box">
-                {% for habit_id, habit_name, habit_desc, user_id in habits %}
-                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                        {{ habit_name }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"><i class="fa fa-trash"></i></span>
-                        </button>
-                        <button type="button" class="close" style="right: 4rem;">
-                            <span aria-hidden="true"><i class="fa fa-info"></i></span>
-                        </button>
-                    </div>
+            {% for habit_id, habit_name, habit_desc, user_id in habits %}
+                <div class="habit-item">
+                    {{ habit_name }}
+                    <button class="btn btn-light btn-right"><i class="fa fa-trash"></i></button>
+                    <button class="btn btn-light btn-right"><i class="fa fa-info"></i></button>
+                </div>
             {% endfor %}
-            </div>
         </div>
     </div>
 {% endblock content %}
