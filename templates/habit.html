@@ -13,15 +13,76 @@
             {% for habit_id, habit_name, habit_desc, user_id in habits %}
                 <div id="habit-{{ habit_id }}" class="habit-item">
                     {{ habit_name }}
-                    <button onclick="removeHabit( '{{ habit_id }}', '{{ habit_name }}')" class="btn btn-light right"><i class="fa fa-trash"></i></button>
-                    <button class="btn btn-light right"><i class="fa fa-info"></i></button>
+                    <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#confirmModal" data-name="{{ habit_name }}" data-id="{{ habit_id }}"><i class="fa fa-trash"></i></button>
+                    <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#infoModal" data-name="{{ habit_name }}" data-desc="{{ habit_desc }}"><i class="fa fa-info"></i></button>
                 </div>
             {% endfor %}
+        </div>
+    </div>
+
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="habitLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Description:</label>
+                            <textarea id="desc-area" rows="10" class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure about deleting this habit?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock content %}
 
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='js/habit.js') }}"></script>
+    <script>
+        $('#infoModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var name = button.data('name');
+            var desc = button.data('desc');
+            var modal = $(this);
+            modal.find('.modal-title').text(name);
+            modal.find('.modal-body textarea').text(desc);
+        });
+
+        $('#confirmModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var name = button.data('name');
+            var modal = $(this);
+            modal.find('.modal-title').text(name);
+        });
+    </script>
 {% endblock scripts %}
