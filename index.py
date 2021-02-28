@@ -68,15 +68,19 @@ def logout():
 def home():
     return render_template('home.html')
 
-@app.route('/habit', methods=['GET'])
-@app.route('/habit/<habit_id>', methods=['DELETE'])
+@app.route('/habit')
+def habit():
+    habits = get_all_habits_for_user(current_user.user_id)
+    return render_template('habit.html', title='Habits', habits=habits)
+
+
+@app.route('/habit/<habit_id>/delete', methods=['POST'])
 @login_required
-def habit(habit_id=None):
-    if request.method == 'GET':
-        habits = get_all_habits_for_user(current_user.user_id)
-        return render_template('habit.html', title='Habits', habits=habits)
-    elif request.method == 'DELETE':
-        return make_response('success', 200) if delete_habit_for_user(current_user.user_id, habit_id) else make_response('failure', 404)
+def delete_habit(habit_id):
+    if delete_habit_for_user(current_user.user_id, habit_id):
+        return make_response('Your habit has been successfully deleted.', 200) 
+    else:
+        return make_response('An error has occurred.', 404)
 
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
@@ -86,7 +90,7 @@ def add():
         if insert_habit_for_user(current_user.user_id, form.name.data, form.description.data):
             flash(f'Your habit "{form.name.data}" has been added.', category='success')
         else:
-            flash('Internal server error! Please try again later.', category='danger')
+            flash('An error has occurred. Please try again later.', category='danger')
         return redirect(url_for('add'))
     return render_template('add.html', title='Add', form=form)
 

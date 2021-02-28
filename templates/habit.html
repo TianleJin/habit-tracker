@@ -13,14 +13,14 @@
             {% for habit_id, habit_name, habit_desc, user_id in habits %}
                 <div id="habit-{{ habit_id }}" class="habit-item">
                     {{ habit_name }}
-                    <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#confirmModal" data-name="{{ habit_name }}" data-id="{{ habit_id }}"><i class="fa fa-trash"></i></button>
-                    <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#infoModal" data-name="{{ habit_name }}" data-desc="{{ habit_desc }}"><i class="fa fa-info"></i></button>
+                    <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#confirm-modal" data-name="{{ habit_name }}" data-id="{{ habit_id }}"><i class="fa fa-trash"></i></button>
+                    <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#info-modal" data-name="{{ habit_name }}" data-desc="{{ habit_desc }}"><i class="fa fa-info"></i></button>
                 </div>
             {% endfor %}
         </div>
     </div>
 
-    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="info-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -59,7 +59,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-danger">Yes</button>
+                    <button type="button" class="btn btn-danger" id="delete-btn">Yes</button>
                 </div>
             </div>
         </div>
@@ -68,21 +68,5 @@
 
 {% block scripts %}
     {{ super() }}
-    <script>
-        $('#infoModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var name = button.data('name');
-            var desc = button.data('desc');
-            var modal = $(this);
-            modal.find('.modal-title').text(name);
-            modal.find('.modal-body textarea').text(desc);
-        });
-
-        $('#confirmModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var name = button.data('name');
-            var modal = $(this);
-            modal.find('.modal-title').text(name);
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/habit.js') }}"></script>
 {% endblock scripts %}
