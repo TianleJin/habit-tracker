@@ -1,32 +1,28 @@
 import os
 import sqlite3
+
 from flask import Flask
 from flask import render_template, redirect, url_for, make_response, request, flash, get_flashed_messages, session
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+
+from database.userDb import get_user_by_id, get_user_by_username, insert_user_into_db
+from database.habitDb import get_all_habits_for_user, insert_habit_for_user, delete_habit_for_user
 
 from models.loginForm import LoginForm
 from models.registrationForm import RegistrationForm
 from models.habitForm import HabitForm
 from models.user import User
 
-db_path = 'app.db'
-user_table = 'user'
-habit_table = 'habit'
-
 app = Flask(__name__)
 app.secret_key = os.environ['HABIT_TRACKER_SECRET_KEY']
 
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
-login_manager.login_message_category = "danger"
 
 @login_manager.user_loader
 def load_user(user_id):
-    conn = sqlite3.connect(db_path)
-    curs = conn.cursor()
-    curs.execute(f'SELECT * from {user_table} where user_id = ?', (user_id, ))
-    lu = curs.fetchone()
+    lu = get_user_by_id(user_id)
     return None if lu is None else User(int(lu[0]), lu[1], lu[2])
 
 @app.route('/')
@@ -37,13 +33,12 @@ def index():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
+
     form = LoginForm()
     if form.validate_on_submit():
-        conn = sqlite3.connect(db_path)
-        cur = conn.cursor()
-        cur.execute(f'SELECT * FROM {user_table} WHERE username = ?', (form.username.data, ))
-        res = list(cur.fetchone())
+        res = list(get_user_by_username(form.username.data))
         user = load_user(res[0])
+
         if check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             return redirect(url_for('home'))
@@ -55,12 +50,10 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        conn = sqlite3.connect(db_path)
-        cur = conn.cursor()
-        hsh = generate_password_hash(form.password.data, 'sha256')
-        cur.execute(f'INSERT INTO {user_table} (username, password) VALUES (?, ?);', (form.username.data, hsh))
-        conn.commit()
-        flash('Your account has been created.', category='success')
+        if insert_user_into_db(form.username.data, generate_password_hash(form.password.data, 'sha256')):
+            flash('Your account has been created.', category='success')
+        else:
+            flash('Internal server error! Please try again later.', category='danger')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -80,34 +73,20 @@ def home():
 @login_required
 def habit(habit_id=None):
     if request.method == 'GET':
-        conn = sqlite3.connect(db_path)
-        cur = conn.cursor()
-        cur.execute(f'SELECT * FROM {habit_table} WHERE user_id = ?', (current_user.user_id, ))
-        habits = cur.fetchall()
-        habits = [] if habits is None else list(habits)
+        habits = get_all_habits_for_user(current_user.user_id)
         return render_template('habit.html', title='Habits', habits=habits)
     elif request.method == 'DELETE':
-        try:
-            conn = sqlite3.connect(db_path)
-            cur = conn.cursor()
-            cur.execute(f'DELETE FROM {habit_table} WHERE user_id = ? AND habit_id = ?', (current_user.get_id(), habit_id))
-            conn.commit()
-            return make_response('success', 200)
-        except:
-            conn.rollback()
-            return make_response('failure', 404)
+        return make_response('success', 200) if delete_habit_for_user(current_user.user_id, habit_id) else make_response('failure', 404)
 
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
 def add():
     form = HabitForm()
     if form.validate_on_submit():
-        conn = sqlite3.connect(db_path)
-        cur = conn.cursor()
-        cur.execute(f'INSERT INTO {habit_table} (name, description, user_id) VALUES (?, ?, ?);', 
-        (form.name.data, form.description.data, current_user.user_id))
-        conn.commit()
-        flash(f'Your habit "{form.name.data}" has been added.', category='success')
+        if insert_habit_for_user(current_user.user_id, form.name.data, form.description.data):
+            flash(f'Your habit "{form.name.data}" has been added.', category='success')
+        else:
+            flash('Internal server error! Please try again later.', category='danger')
         return redirect(url_for('add'))
     return render_template('add.html', title='Add', form=form)
 
