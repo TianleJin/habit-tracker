@@ -7,7 +7,7 @@ from flask_login import LoginManager, UserMixin, login_required, login_user, log
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from database.userDb import get_user_by_id, get_user_by_username, insert_user_into_db
-from database.habitDb import get_all_habits_for_user, insert_habit_for_user, delete_habit_for_user
+from database.habitDb import get_all_habits_for_user, insert_habit_for_user, delete_habit_for_user, update_habit_for_user
 
 from models.loginForm import LoginForm
 from models.registrationForm import RegistrationForm
@@ -78,7 +78,15 @@ def habit():
 @login_required
 def delete_habit(habit_id):
     if delete_habit_for_user(current_user.user_id, habit_id):
-        return make_response('Your habit has been successfully deleted.', 200) 
+        return make_response('Your habit has been deleted.', 200) 
+    else:
+        return make_response('An error has occurred.', 404)
+
+@app.route('/habit/<habit_id>/update', methods=['POST'])
+@login_required
+def update_habit(habit_id):
+    if update_habit_for_user(current_user.user_id, habit_id, request.json['desc']):
+        return make_response('Your habit has been updated.', 200) 
     else:
         return make_response('An error has occurred.', 404)
 

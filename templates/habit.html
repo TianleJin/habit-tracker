@@ -14,7 +14,7 @@
                 <div id="habit-{{ habit_id }}" class="habit-item">
                     {{ habit_name }}
                     <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#confirm-modal" data-name="{{ habit_name }}" data-id="{{ habit_id }}"><i class="fa fa-trash"></i></button>
-                    <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#info-modal" data-name="{{ habit_name }}" data-desc="{{ habit_desc }}"><i class="fa fa-info"></i></button>
+                    <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#info-modal" data-name="{{ habit_name }}" data-id="{{ habit_id }}" data-desc="{{ habit_desc }}"><i class="fa fa-info"></i></button>
                 </div>
             {% endfor %}
         </div>
@@ -38,8 +38,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-primary" id="update-btn">Update</button>
                 </div>
             </div>
         </div>
