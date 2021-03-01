@@ -1,31 +1,50 @@
-function deleteHabit(habit_id) {
+function displayAlert(message, category) {
+    $('#message-box').empty();
+    $('#message-box').append(
+        `<div class="alert alert-${category} alert-dismissible fade show" role="alert" style="margin-bottom:0;">
+            ${message}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>`
+    );
+}
+
+function deleteHabit(habit_id, habit_name) {
     $.ajax({
         url: `habit/${habit_id}/delete`,
         type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({
+            'name': habit_name
+        }), 
         success: function(result) {
-            console.log(result);
+            displayAlert(result, "success");
             document.getElementById(`habit-${habit_id}`).style.opacity = 0;
             setTimeout(function() {
                 document.getElementById(`habit-${habit_id}`).style.display = "none";
             }, 500);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) { 
-            alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+            displayAlert(errorThrown, "danger");
         }
     });
 }
 
-function updateHabit(habit_id) {
+function updateHabit(habit_id, habit_name) {
     $.ajax({
         url: `habit/${habit_id}/update`,
         type: 'POST',
         contentType: "application/json; charset=utf-8",
-        data: JSON.stringify({ 'desc': document.getElementById('desc-area').value }),
+        data: JSON.stringify({ 
+            'name': habit_name,
+            'desc': document.getElementById('desc-area').value 
+        }),
         success: function(result) {
-            console.log(result);
+            displayAlert(result, "success");
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) { 
-            alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+            displayAlert(errorThrown, "danger");
         }
     });
 }
@@ -40,8 +59,8 @@ $('#info-modal').on('show.bs.modal', function (event) {
     modal.find('.modal-body textarea').text(desc);
 
     $('#update-btn').on('click', function() {
+        updateHabit(id, name);
         $('#info-modal').modal('hide');
-        updateHabit(id);
     });
 });
 
@@ -54,6 +73,6 @@ $('#confirm-modal').on('show.bs.modal', function (event) {
 
     $('#delete-btn').on('click', function() {
         $('#confirm-modal').modal('hide');
-        deleteHabit(id);
+        deleteHabit(id, name);
     });
 });

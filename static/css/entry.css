@@ -11,6 +11,12 @@ body {
     align-items: center;
     background-image: url('../img/login_background.jpg');
     background-size: cover;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 
 form {

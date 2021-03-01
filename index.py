@@ -53,7 +53,7 @@ def register():
         if insert_user_into_db(form.username.data, generate_password_hash(form.password.data, 'sha256')):
             flash('Your account has been created.', category='success')
         else:
-            flash('Internal server error! Please try again later.', category='danger')
+            flash('An error has occurred.', category='danger')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -73,12 +73,11 @@ def habit():
     habits = get_all_habits_for_user(current_user.user_id)
     return render_template('habit.html', title='Habits', habits=habits)
 
-
 @app.route('/habit/<habit_id>/delete', methods=['POST'])
 @login_required
 def delete_habit(habit_id):
     if delete_habit_for_user(current_user.user_id, habit_id):
-        return make_response('Your habit has been deleted.', 200) 
+        return make_response(f'Your habit "{request.json["name"]}" has been deleted.', 200) 
     else:
         return make_response('An error has occurred.', 404)
 
@@ -86,7 +85,7 @@ def delete_habit(habit_id):
 @login_required
 def update_habit(habit_id):
     if update_habit_for_user(current_user.user_id, habit_id, request.json['desc']):
-        return make_response('Your habit has been updated.', 200) 
+        return make_response(f'Your habit "{request.json["name"]}" has been updated.', 200) 
     else:
         return make_response('An error has occurred.', 404)
 
@@ -98,7 +97,7 @@ def add():
         if insert_habit_for_user(current_user.user_id, form.name.data, form.description.data):
             flash(f'Your habit "{form.name.data}" has been added.', category='success')
         else:
-            flash('An error has occurred. Please try again later.', category='danger')
+            flash('An error has occurred.', category='danger')
         return redirect(url_for('add'))
     return render_template('add.html', title='Add', form=form)
 
