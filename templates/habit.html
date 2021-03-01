@@ -13,7 +13,7 @@
             {% for habit_id, habit_name, habit_desc, user_id in habits %}
                 <div id="habit-{{ habit_id }}" class="habit-item">
                     {{ habit_name }}
-                    <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#confirm-modal" data-name="{{ habit_name }}" data-id="{{ habit_id }}"><i class="fa fa-trash"></i></button>
+                    <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#confirm-modal" data-name="{{ habit_name }}" data-id="{{ habit_id }}" data-desc="{{ habit_desc }}"><i class="fa fa-trash"></i></button>
                     <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#info-modal" data-name="{{ habit_name }}" data-id="{{ habit_id }}" data-desc="{{ habit_desc }}"><i class="fa fa-info"></i></button>
                 </div>
             {% endfor %}
@@ -30,15 +30,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="update-form" action="/" method="post">
                         <div class="form-group">
-                            <label for="desc-area" class="col-form-label">Description:</label>
-                            <textarea id="desc-area" rows="10" class="form-control"></textarea>
+                            <input type="text" name="name" style="display:none;"></input>
+                            <label for="hdesc" class="col-form-label">Description:</label>
+                            <textarea id="hdesc" name="desc" class="form-control" rows="10"></textarea>
                         </div>
+                        <button type="submit" class="btn btn-primary" style="float:right;">Update</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="update-btn">Update</button>
                 </div>
             </div>
         </div>
@@ -58,7 +57,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-danger" id="delete-btn">Yes</button>
+                    <form id="delete-form" action="/" method="post">
+                        <input type="text" name="name" style="display:none;"></input>
+                        <button type="submit" class="btn btn-danger">Yes</button>
+                    </form>
                 </div>
             </div>
         </div>

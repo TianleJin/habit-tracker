@@ -77,25 +77,27 @@ def home():
 def habit():
     habits = get_all_habits_for_user(current_user.user_id)
     if habits is False:
-        habits = []
         flash('A server error has occurred.', category='danger')
+        habits = []
     return render_template('habit.html', title='Habits', habits=habits)
 
 @app.route('/habit/<habit_id>/delete', methods=['POST'])
 @login_required
 def delete_habit(habit_id):
     if delete_habit_for_user(current_user.user_id, habit_id):
-        return make_response(f'Your habit "{request.json["name"]}" has been deleted.', 200) 
+        flash(f'Your habit "{request.form["name"]}" has been deleted.', 'success')
     else:
-        return make_response('A server error has occurred.', 404)
+        flash('A server error has occurred.', 'danger')
+    return redirect(url_for('habit'))
 
 @app.route('/habit/<habit_id>/update', methods=['POST'])
 @login_required
 def update_habit(habit_id):
-    if update_habit_for_user(current_user.user_id, habit_id, request.json['desc']):
-        return make_response(f'Your habit "{request.json["name"]}" has been updated.', 200) 
+    if update_habit_for_user(current_user.user_id, habit_id, request.form['desc']):
+        flash(f'Your habit "{request.form["name"]}" has been updated.', 'success')
     else:
-        return make_response('A server error has occurred.', 404)
+        flash('A server error has occurred.', 'danger')
+    return redirect(url_for('habit'))
 
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
