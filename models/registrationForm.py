@@ -18,5 +18,5 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
-        if get_user_by_username(username.data) is not None:
+        if get_user_by_username(username.data):
             raise ValidationError('That username already exists.')

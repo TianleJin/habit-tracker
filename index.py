@@ -36,14 +36,18 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        res = list(get_user_by_username(form.username.data))
-        user = load_user(res[0])
-
-        if check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            return redirect(url_for('home'))
+        res = get_user_by_username(form.username.data)
+        if res is False:
+            flash('A server error has occurred.', category='danger')
         else:
-            flash('Your username or password is incorrect.', category='danger')
+            res = list(get_user_by_username(form.username.data))
+            user = load_user(res[0])
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                flash(f'Welcome {user.username}!', 'success')
+                return redirect(url_for('home'))
+            else:
+                flash('Your username or password is incorrect.', category='danger')
     return render_template('login.html', title='Login', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -53,7 +57,7 @@ def register():
         if insert_user_into_db(form.username.data, generate_password_hash(form.password.data, 'sha256')):
             flash('Your account has been created.', category='success')
         else:
-            flash('An error has occurred.', category='danger')
+            flash('A server error has occurred.', category='danger')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -69,8 +73,12 @@ def home():
     return render_template('home.html')
 
 @app.route('/habit')
+@login_required
 def habit():
     habits = get_all_habits_for_user(current_user.user_id)
+    if habits is False:
+        habits = []
+        flash('A server error has occurred.', category='danger')
     return render_template('habit.html', title='Habits', habits=habits)
 
 @app.route('/habit/<habit_id>/delete', methods=['POST'])
@@ -79,7 +87,7 @@ def delete_habit(habit_id):
     if delete_habit_for_user(current_user.user_id, habit_id):
         return make_response(f'Your habit "{request.json["name"]}" has been deleted.', 200) 
     else:
-        return make_response('An error has occurred.', 404)
+        return make_response('A server error has occurred.', 404)
 
 @app.route('/habit/<habit_id>/update', methods=['POST'])
 @login_required
@@ -87,7 +95,7 @@ def update_habit(habit_id):
     if update_habit_for_user(current_user.user_id, habit_id, request.json['desc']):
         return make_response(f'Your habit "{request.json["name"]}" has been updated.', 200) 
     else:
-        return make_response('An error has occurred.', 404)
+        return make_response('A server error has occurred.', 404)
 
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
