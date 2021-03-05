@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 import sqlite3
 
 from flask import Flask
@@ -70,7 +71,8 @@ def logout():
 @app.route('/home')
 @login_required
 def home():
-    return render_template('home.html')
+    today = datetime.today().strftime('%d-%m-%Y')
+    return render_template('home.html', today=today)
 
 @app.route('/habit')
 @login_required

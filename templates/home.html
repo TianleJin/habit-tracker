@@ -1,6 +1,24 @@
 {% extends 'base.html' %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock head %}
+
 {% block content %}
-    <div style="margin: 20px;">
-        <h1>Today</h1>
+    <div class="outer">
+        <div class="inner">
+            <div id="info-bar">
+                <h4 id="date-text">Date: {{ today }}</h4>
+                <h4 id="completed-text" class="ml-auto">Completed: 33</h4>
+                <h4 id="remaining-text" class="ml-auto">Remaining: 67</h4>
+            </div>
+            <hr>
+        </div>
     </div>
 {% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock scripts %}
