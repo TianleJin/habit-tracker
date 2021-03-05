@@ -15,9 +15,9 @@ CREATE TABLE habit(
 );
 
 CREATE TABLE record(
-	date TEXT NOT NULL,
+	record_date TEXT NOT NULL,
 	status INTEGER DEFAULT 0 NOT NULL CHECK(status IN (0, 1)),
 	habit_id INTEGER NOT NULL,
-	PRIMARY KEY(habit_id, date),
+	PRIMARY KEY(habit_id, record_date),
 	FOREIGN KEY(habit_id) REFERENCES habit(habit_id) ON DELETE CASCADE
 );
