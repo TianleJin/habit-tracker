@@ -1,20 +1,23 @@
-#info-bar {
-    display: flex;
-    text-align: left;
+#progress-text {
+    margin-top: 1em;
 }
 
-.habit-item {
+.progress {
+    background:rgb(131, 58, 180, 0.2);
+    height: 2em;
+    font-size: 1em;
+    margin-bottom: 2em;
+}
+
+.progress-bar {
+    background: rgb(131, 58, 180);
+}
+
+.record-item {
     color: white;
-    background: rgb(131, 58, 180, 0.7);
+    background: rgb(214,41,118, 0.8);
     padding: 0.5em 0;
     margin-bottom: 0.5em;
     font-size: 1.5em;
-    border-radius: 25px;
-}
-
-.right {
-    float: right;
-    margin-right: 1em;
-    width: 2.5em;
     border-radius: 25px;
 }

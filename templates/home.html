@@ -8,12 +8,17 @@
 {% block content %}
     <div class="outer">
         <div class="inner">
-            <div id="info-bar">
-                <h4 id="date-text">Date: {{ today }}</h4>
-                <h4 id="completed-text" class="ml-auto">Completed: 33</h4>
-                <h4 id="remaining-text" class="ml-auto">Remaining: 67</h4>
-            </div>
+            <h1> {{ today }} </h1>
             <hr>
+            <h4 id="progress-text"></h4>
+            <div class="progress">
+                <div id="progress-bar" class="progress-bar" role="progressbar"></div>
+            </div>
+            {% for record_date, habit_name, habit_id, status in today_habit %}
+                <div id="record-{{ habit_id }}" class="record-item">
+                    {{ habit_name }}
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock content %}
