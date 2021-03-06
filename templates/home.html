@@ -10,9 +10,14 @@
         <div class="inner">
             <h1> {{ today }} </h1>
             <hr>
-            <h4 id="progress-text"></h4>
-            <div class="progress">
-                <div id="progress-bar" class="progress-bar" role="progressbar"></div>
+            {% if not today_habit %}
+                <p>You don't have a habit yet. Click <a href="{{ url_for('add') }}">here</a> to create your first habit.</p>
+            {% endif %}
+            <div id="progress">
+                <h4 id="progress-text"></h4>
+                <div class="progress">
+                    <div id="progress-bar" class="progress-bar" role="progressbar"></div>
+                </div>
             </div>
             {% for record_date, habit_name, habit_id, status in today_habit %}
                 <div id="record-{{ habit_id }}" class="record-item">

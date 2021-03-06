@@ -10,6 +10,9 @@
         <div class="inner">
             <h1>Your Habits</h1>
             <hr>
+            {% if not habits %}
+                <p>You don't have a habit yet. Click <a href="{{ url_for('add') }}">here</a> to create your first habit.</p>
+            {% endif %}
             {% for habit_id, habit_name, habit_desc, user_id in habits %}
                 <div id="habit-{{ habit_id }}" class="habit-item">
                     {{ habit_name }}

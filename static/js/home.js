@@ -28,17 +28,18 @@ function getRecords() {
 }
 
 function updateProgress() {
-    $('#progress-text').html('Progress: ' + done + ' / ' + total);
-    var progressBar = $('#progress-bar');
     if (total == 0) {
-        progressBar.width('0%');
+        $('#progress').hide();
+        return;
     }
-    else {
-        let percentage = Math.round(done / total * 100) + '%';
-        progressBar.width(percentage);
-        if (done > 0) {
-            progressBar.html(percentage);
-        }
+
+    $('#progress-text').html('Progress: ' + done + ' / ' + total);
+    let progressBar = $('#progress-bar');
+    let percentage = Math.round(done / total * 100) + '%';
+    progressBar.width(percentage);
+
+    if (done > 0) {
+        progressBar.html(percentage);
     }
 }
 

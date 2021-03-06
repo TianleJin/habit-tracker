@@ -1,12 +1,12 @@
-#progress-text {
+#progress {
     margin-top: 1em;
+    margin-bottom: 2em;
 }
 
 .progress {
     background:rgb(131, 58, 180, 0.2);
     height: 2em;
     font-size: 1em;
-    margin-bottom: 2em;
 }
 
 .progress-bar {
