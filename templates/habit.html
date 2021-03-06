@@ -14,7 +14,7 @@
                 <p>You don't have a habit yet. Click <a href="{{ url_for('add') }}">here</a> to create your first habit.</p>
             {% endif %}
             {% for habit_id, habit_name, habit_desc, user_id in habits %}
-                <div id="habit-{{ habit_id }}" class="habit-item">
+                <div class="habit-item">
                     {{ habit_name }}
                     <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#confirm-modal" data-name="{{ habit_name }}" data-id="{{ habit_id }}" data-desc="{{ habit_desc }}"><i class="fa fa-trash"></i></button>
                     <button type="button" class="btn btn-light right" data-toggle="modal" data-target="#info-modal" data-name="{{ habit_name }}" data-id="{{ habit_id }}" data-desc="{{ habit_desc }}"><i class="fa fa-info"></i></button>
@@ -33,7 +33,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="update-form" action="/" method="post">
+                    <form id="update-form" method="post">
                         <div class="form-group">
                             <input type="text" name="name" style="display:none;"></input>
                             <label for="hdesc" class="col-form-label">Description:</label>
@@ -60,7 +60,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-                    <form id="delete-form" action="/" method="post">
+                    <form id="delete-form" method="post">
                         <input type="text" name="name" style="display:none;"></input>
                         <button type="submit" class="btn btn-danger">Yes</button>
                     </form>

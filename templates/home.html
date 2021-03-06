@@ -20,8 +20,9 @@
                 </div>
             </div>
             {% for record_date, habit_name, habit_id, status in today_habit %}
-                <div id="record-{{ habit_id }}" class="record-item">
+                <div id="record-{{ record_date }}-{{ habit_id }}"class="record-item" onclick="updateRecord(this, '{{ habit_id }}', '{{ record_date }}')">
                     {{ habit_name }}
+                    <input type="checkbox" class="right-checkbox">
                 </div>
             {% endfor %}
         </div>
@@ -31,4 +32,7 @@
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <script>
+        getRecords();
+    </script>
 {% endblock scripts %}

@@ -4,7 +4,7 @@ path = 'app.db'
 habit_table = 'habit'
 record_table = 'record'
 
-def get_all_records(user_id, date_string):
+def get_all_records_for_user(user_id, date_string):
     with sqlite3.connect(path) as conn:
         curs = conn.cursor()
         curs.execute(f'''
@@ -21,7 +21,7 @@ def get_all_records(user_id, date_string):
         records = curs.fetchall()
         return list() if records is None else list(records)
 
-def record_exists(habit_id, date_string):
+def check_record_exists(habit_id, date_string):
     with sqlite3.connect(path) as conn:
         curs = conn.cursor()
         curs.execute(f'SELECT * FROM {record_table} WHERE habit_id = ? AND record_date = ?', (habit_id, date_string))
@@ -29,7 +29,7 @@ def record_exists(habit_id, date_string):
             return False
         return True
 
-def insert_record(habit_id, date_string):
+def insert_record_for_habit(habit_id, date_string):
     with sqlite3.connect(path) as conn:
         try:
             curs = conn.cursor()
@@ -40,7 +40,8 @@ def insert_record(habit_id, date_string):
             conn.rollback()
             return False
 
-def update_record(habit_id, date_string, status):
+def update_record_for_habit(habit_id, date_string, status):
+    print(habit_id, date_string, status)
     with sqlite3.connect(path) as conn:
         try:
             curs = conn.cursor()

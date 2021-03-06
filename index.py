@@ -3,13 +3,13 @@ from datetime import datetime
 import sqlite3
 
 from flask import Flask
-from flask import render_template, redirect, url_for, jsonify, request, flash, get_flashed_messages, session
+from flask import render_template, redirect, url_for, make_response, jsonify, request, flash, get_flashed_messages, session
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from database.userDb import get_user_by_id, get_user_by_username, insert_user_into_db
 from database.habitDb import get_all_habits_for_user, insert_habit_for_user, delete_habit_for_user, update_habit_for_user
-from database.recordDb import get_all_records, record_exists, insert_record, update_record
+from database.recordDb import get_all_records_for_user, check_record_exists, insert_record_for_habit, update_record_for_habit
 
 from models.loginForm import LoginForm
 from models.registrationForm import RegistrationForm
@@ -74,17 +74,17 @@ def logout():
 def home():
     today = datetime.today().strftime('%d-%m-%Y')
     for habit in get_all_habits_for_user(current_user.user_id):
-        if not record_exists(habit[0], today):
-            insert_record(habit[0], today)
+        if not check_record_exists(habit[0], today):
+            insert_record_for_habit(habit[0], today)
 
-    today_habit = get_all_records(current_user.user_id, today)
+    today_habit = get_all_records_for_user(current_user.user_id, today)
     return render_template('home.html', title='today', today=today, today_habit=today_habit)
 
-@app.route('/home/records')
+@app.route('/records')
 @login_required
-def records():
+def get_records():
     today = datetime.today().strftime('%d-%m-%Y')
-    records = get_all_records(current_user.user_id, today)
+    records = get_all_records_for_user(current_user.user_id, today)
     records = [{
         'record_date': record_date,
         'habit_name': habit_name,
@@ -92,6 +92,14 @@ def records():
         'status': status 
     } for record_date, habit_name, habit_id, status in records]
     return jsonify(records)
+
+@app.route('/records/update', methods=['POST'])
+@login_required
+def update_records():
+    if update_record_for_habit(request.json['habit_id'], request.json['record_date'], request.json['status']):
+        return make_response('success', 200)
+    else:
+        return make_response('failure', 404)
 
 @app.route('/habit')
 @login_required

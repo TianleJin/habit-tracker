@@ -14,10 +14,27 @@
 }
 
 .record-item {
+    position: relative;
     color: white;
     background: rgb(214,41,118, 0.8);
     padding: 0.5em 0;
     margin-bottom: 0.5em;
     font-size: 1.5em;
     border-radius: 25px;
+    transition: background-color 1000ms linear;
+}
+
+.record-item:hover {
+    cursor: pointer;
+}
+
+.right-checkbox {
+    position: absolute;
+    right: 1.25em;
+    top: 1em;
+    transform: scale(2);
+}
+
+.right-checkbox {
+    cursor: pointer;
 }
