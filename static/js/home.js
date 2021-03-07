@@ -1,8 +1,8 @@
 var done = 0;
 var total = 0;
 var records = null;
-var checkedBg = "rgba(214, 41, 118, 0.4)";
-var uncheckedBg = "rgba(214, 41, 118, 0.8)";
+var checkedBg = "rgba(214, 41, 118, 0.5)";
+var uncheckedBg = "rgba(214, 41, 118)";
 
 function updateProgress() {
     if (total == 0) {
@@ -10,8 +10,8 @@ function updateProgress() {
         return;
     }
 
-    $('#progress-text').html('Completed ' + done + ' / ' + total + ' Habits Today');
-    let progressBar = $('#progress-bar');
+    $('#progress-text').html('Completed ' + done + ' of ' + total + ' Habits');
+    let progressBar = $('.progress-bar');
     let percentage = Math.round(done / total * 100) + '%';
     progressBar.width(percentage);
     if (done > 0) {
@@ -45,6 +45,10 @@ function updateDone(status) {
     else {
         done--;
     }
+}
+
+function showModal() {
+    $('#congrats-modal').modal('show');
 }
 
 function getRecords() {
@@ -102,6 +106,9 @@ function updateRecord(elem, habit_id, date_string) {
             updateDone(record['status']);
             displayRecord(elem, record['status']);
             updateProgress();
+            if (done == total) {
+                showModal();
+            }
             console.log('update response: ' + res);
         },
         error: function (xhr, ajaxOptions, thrownError) {
