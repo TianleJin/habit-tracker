@@ -10,12 +10,15 @@ function updateProgress() {
         return;
     }
 
-    $('#progress-text').html('Progress: ' + done + ' / ' + total);
+    $('#progress-text').html('Completed ' + done + ' / ' + total + ' Habits Today');
     let progressBar = $('#progress-bar');
     let percentage = Math.round(done / total * 100) + '%';
     progressBar.width(percentage);
     if (done > 0) {
         progressBar.html(percentage);
+    }
+    else {
+        progressBar.html('');
     }
 }
 
@@ -107,3 +110,5 @@ function updateRecord(elem, habit_id, date_string) {
         }
     });
 }
+
+getRecords();

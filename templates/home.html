@@ -14,7 +14,7 @@
                 <p>You don't have a habit yet. Click <a href="{{ url_for('add') }}">here</a> to create your first habit.</p>
             {% endif %}
             <div id="progress">
-                <h4 id="progress-text"></h4>
+                <h5 id="progress-text"></h5>
                 <div class="progress">
                     <div id="progress-bar" class="progress-bar" role="progressbar"></div>
                 </div>
@@ -32,7 +32,4 @@
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
-    <script>
-        getRecords();
-    </script>
 {% endblock scripts %}
