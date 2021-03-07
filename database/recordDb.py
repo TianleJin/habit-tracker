@@ -41,7 +41,6 @@ def insert_record_for_habit(habit_id, date_string):
             return False
 
 def update_record_for_habit(habit_id, date_string, status):
-    print(habit_id, date_string, status)
     with sqlite3.connect(path) as conn:
         try:
             curs = conn.cursor()
