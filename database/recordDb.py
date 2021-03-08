@@ -26,20 +26,17 @@ def get_completed_habits_count_for_user(user_id):
         curs = conn.cursor()
         curs.execute(f'''
             SELECT
-                r.record_date, count(*)
+                r.record_date, SUM(r.status)
             FROM 
-                {habit_table} h JOIN {record_table} r 
+                {habit_table} h JOIN {record_table} r
                 ON h.habit_id = r.habit_id
             WHERE 
                 h.user_id = ?
             GROUP BY
                 r.record_date
-            HAVING
-                r.status = 1
             ;
         ''', (user_id, ))
-        records = curs.fetchall()
-        return dict(records)
+        return dict(curs.fetchall())
 
 def check_record_exists(habit_id, date_string):
     with sqlite3.connect(path) as conn:

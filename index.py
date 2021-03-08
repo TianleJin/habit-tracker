@@ -149,25 +149,26 @@ def progress():
 @login_required
 def calendar():
     data = get_completed_habits_count_for_user(current_user.user_id)
-    print(data)
-
-    # res = {}
-    # today = datetime.now()
-    # start_date = datetime(today.year, 1, 1)
-    # end_date = datetime(today.year, 12, 31)
-
-    # for x in range((end_date - start_date).days + 1):
-    #     date = start_date + timedelta(days=x)
-    #     time_stamp = datetime.timestamp(date)
-    #     date_string = date.strftime('%d-%m-%Y')
-
-    # print(res)
-    return jsonify(data)
+    return jsonify(create_calendar_json(data))
 
 @app.route('/profile')
 @login_required
 def profile():
     return render_template('profile.html')
+
+def create_calendar_json(data):
+    today = datetime.now()
+    start_date = datetime(today.year, 1, 1)
+    end_date = datetime(today.year, 12, 31)
+
+    res = {}
+    for x in range(1 + (end_date - start_date).days):
+        date = start_date + timedelta(days=x)
+        date_string = date.strftime('%d-%m-%Y')
+        count = data[date_string] if date_string in data else 0
+        time_stamp = round(datetime.timestamp(date))
+        res[time_stamp] = count
+    return res
 
 
 if __name__ == '__main__':
