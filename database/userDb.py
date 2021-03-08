@@ -32,6 +32,7 @@ def insert_user_into_db(username, password_hash):
         return False
 
     with sqlite3.connect(path) as conn:
+        conn.execute("PRAGMA foreign_keys = 1;")
         try:
             curs = conn.cursor()
             curs.execute(f'INSERT INTO {table} (username, password) VALUES (?, ?);', (username, password_hash))

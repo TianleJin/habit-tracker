@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import sqlite3
 
 from flask import Flask
@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from database.userDb import get_user_by_id, get_user_by_username, insert_user_into_db
 from database.habitDb import get_all_habits_for_user, insert_habit_for_user, delete_habit_for_user, update_habit_for_user
-from database.recordDb import get_all_records_for_user, check_record_exists, insert_record_for_habit, update_record_for_habit
+from database.recordDb import get_all_records_for_user, get_completed_habits_count_for_user, check_record_exists, insert_record_for_habit, update_record_for_habit
 
 from models.loginForm import LoginForm
 from models.registrationForm import RegistrationForm
@@ -144,6 +144,25 @@ def add():
 @login_required
 def progress():
     return render_template('progress.html', title='Progress')
+
+@app.route('/calendar')
+@login_required
+def calendar():
+    data = get_completed_habits_count_for_user(current_user.user_id)
+    print(data)
+
+    # res = {}
+    # today = datetime.now()
+    # start_date = datetime(today.year, 1, 1)
+    # end_date = datetime(today.year, 12, 31)
+
+    # for x in range((end_date - start_date).days + 1):
+    #     date = start_date + timedelta(days=x)
+    #     time_stamp = datetime.timestamp(date)
+    #     date_string = date.strftime('%d-%m-%Y')
+
+    # print(res)
+    return jsonify(data)
 
 @app.route('/profile')
 @login_required

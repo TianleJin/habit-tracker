@@ -60,7 +60,8 @@ function initHeatMap() {
         cellSize: cellSize,
         start: startDate,
         tooltip: true,
-        verticalOrientation: vertical
+        verticalOrientation: vertical,
+        legendColors: ["lavender", "rgb(131, 58, 180)"]
     });
 }
 

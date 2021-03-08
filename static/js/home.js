@@ -1,8 +1,8 @@
 var done = 0;
 var total = 0;
 var records = null;
-var checkedBg = "rgba(214, 41, 118, 0.5)";
-var uncheckedBg = "rgba(214, 41, 118)";
+var checkedBg = "rgb(131, 58, 180, 0.5)";
+var uncheckedBg = "rgb(131, 58, 180)";
 
 function updateProgress() {
     if (total == 0) {

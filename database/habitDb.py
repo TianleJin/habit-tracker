@@ -24,6 +24,7 @@ def insert_habit_for_user(user_id, habit_name, habit_desc):
         return False
 
     with sqlite3.connect(path) as conn:
+        conn.execute("PRAGMA foreign_keys = 1;")
         try:
             curs = conn.cursor()
             curs.execute(f'INSERT INTO {table} (name, description, user_id) VALUES (?, ?, ?);', (habit_name, habit_desc, user_id))
@@ -38,6 +39,7 @@ def update_habit_for_user(user_id, habit_id, habit_desc):
         return False
 
     with sqlite3.connect(path) as conn:
+        conn.execute("PRAGMA foreign_keys = 1;")
         try:
             curs = conn.cursor()
             curs.execute(f'UPDATE {table} SET description = ? WHERE user_id = ? AND habit_id = ?;', (habit_desc, user_id, habit_id))
@@ -52,6 +54,7 @@ def delete_habit_for_user(user_id, habit_id):
         return False
 
     with sqlite3.connect(path) as conn:
+        conn.execute("PRAGMA foreign_keys = 1;")
         try:
             curs = conn.cursor()
             curs.execute(f'DELETE FROM {table} WHERE user_id = ? AND habit_id = ?', (user_id, habit_id))
