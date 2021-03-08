@@ -1,6 +1,25 @@
 {% extends 'base.html' %}
+
+{% block head %}
+    {{ super() }}
+    <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css" />
+{% endblock head %}
+
 {% block content %}
-    <div style="margin: 20px;">
-        <h1>Progress</h1>
+    <div class="outer">
+        <div class="inner">
+            <h1>Progress Tracker</h1>
+            <hr>
+            <div class="mt-4">
+                <div id="heatmap"></div>
+            </div>
+        </div>
     </div>
 {% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/progress.js') }}"></script>
+{% endblock scripts %}

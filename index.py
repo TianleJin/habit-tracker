@@ -143,7 +143,7 @@ def add():
 @app.route('/progress')
 @login_required
 def progress():
-    return render_template('progress.html')
+    return render_template('progress.html', title='Progress')
 
 @app.route('/profile')
 @login_required
