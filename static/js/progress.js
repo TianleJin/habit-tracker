@@ -1,4 +1,6 @@
 var cal = null;
+var data = null;
+var total = null;
 var cellSize = null;
 var startDate = null;
 
@@ -20,13 +22,31 @@ function getCellSize() {
     return (getInnerDivWidth() - 104) / 53; 
 }
 
+function getCalendarData(cb) {
+    total = 0;
+    $.ajax({
+        type: 'GET',
+        url: '/calendar',
+        dataType: 'json',
+        success: function(res) {
+            data = res;
+            for (let timestamp in res) {
+                total += res[timestamp];
+            }
+            $('.heatmap-container .heatmap-title').html(`Completed ${total} Habits this Year`);
+            cb();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+        }
+    })
+}
+
 function initHeatMap() {
     cal = new CalHeatMap();
     startDate = getStartDate();
-    cellSize = getCellSize();
-    if (cellSize < 5) {
-        cellSize = 5;
-    }
+    cellSize = Math.max(5, getCellSize());
 
     cal.init({ 
         itemSelector: "#heatmap",
@@ -38,7 +58,7 @@ function initHeatMap() {
         start: startDate,
         range: 1,
         tooltip: true,
-        data: '/calendar',
+        data: data,
         legendColors: {
             min: "#D8BFD8",
             max: "#833AB4",
@@ -48,4 +68,4 @@ function initHeatMap() {
     });
 }
 
-initHeatMap();
+getCalendarData(initHeatMap);
