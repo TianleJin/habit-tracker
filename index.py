@@ -9,7 +9,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from database.userDb import get_user_by_id, get_user_by_username, insert_user_into_db
 from database.habitDb import get_all_habits_for_user, insert_habit_for_user, delete_habit_for_user, update_habit_for_user
-from database.recordDb import get_all_records_for_user, get_completed_habits_count_for_user, check_record_exists, insert_record_for_habit, update_record_for_habit
+from database.recordDb import (get_all_records_for_user, get_completed_habits_count_for_user, check_record_exists, insert_record_for_habit, 
+update_record_for_habit, get_completed_habit_count_grouped_by_habits)
 
 from models.loginForm import LoginForm
 from models.registrationForm import RegistrationForm
@@ -72,7 +73,7 @@ def logout():
 @app.route('/home')
 @login_required
 def home():
-    today = datetime.today().strftime('%d-%m-%Y')
+    today = datetime.today().strftime('%Y-%m-%d')
     for habit in get_all_habits_for_user(current_user.user_id):
         if not check_record_exists(habit[0], today):
             insert_record_for_habit(habit[0], today)
@@ -83,7 +84,7 @@ def home():
 @app.route('/records')
 @login_required
 def get_records():
-    today = datetime.today().strftime('%d-%m-%Y')
+    today = datetime.today().strftime('%Y-%m-%d')
     records = get_all_records_for_user(current_user.user_id, today)
     records = [{
         'record_date': record_date,
@@ -151,6 +152,18 @@ def calendar():
     data = get_completed_habits_count_for_user(current_user.user_id)
     return jsonify(create_calendar_json(data))
 
+@app.route('/chart/<period>')
+@login_required
+def chart(period):
+    day_count = {
+        'year': 365,
+        'month': 30,
+        'week': 7
+    }
+    time_stamp = (datetime.now() - timedelta(days=day_count[period])).timestamp()
+    data = get_completed_habit_count_grouped_by_habits(current_user.user_id, time_stamp)
+    return jsonify(data)
+
 @app.route('/profile')
 @login_required
 def profile():
@@ -164,12 +177,11 @@ def create_calendar_json(data):
     res = {}
     for x in range(1 + (end_date - start_date).days):
         date = start_date + timedelta(days=x)
-        date_string = date.strftime('%d-%m-%Y')
+        date_string = date.strftime('%Y-%m-%d')
         count = data[date_string] if date_string in data else 0
         time_stamp = round(datetime.timestamp(date))
         res[time_stamp] = count
     return res
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -38,6 +38,24 @@ def get_completed_habits_count_for_user(user_id):
         ''', (user_id, ))
         return dict(curs.fetchall())
 
+def get_completed_habit_count_grouped_by_habits(user_id, start_date):
+    with sqlite3.connect(path) as conn:
+        curs = conn.cursor()
+        curs.execute(f'''
+            SELECT
+                h.name, SUM(r.status)
+            FROM 
+                {habit_table} h JOIN {record_table} r
+                ON h.habit_id = r.habit_id
+            WHERE
+                CAST(strftime('%s', r.record_date) AS INT) >= {start_date}
+                AND h.user_id = ?
+            GROUP BY
+                h.habit_id, h.name
+            ;
+        ''', (user_id, ))
+        return dict(curs.fetchall())
+
 def check_record_exists(habit_id, date_string):
     with sqlite3.connect(path) as conn:
         curs = conn.cursor()

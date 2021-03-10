@@ -4,6 +4,7 @@
     {{ super() }}
     <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous"/>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/progress.css') }}"></link>
 {% endblock head %}
@@ -13,11 +14,23 @@
         <div class="inner">
             <h1>Progress Tracker</h1>
             <hr>
-            <div class="heatmap-container">
-                <h5 class="heatmap-title"></h5>
-                <div class="mb-4 mt-4">
-                    <div id="heatmap"></div>
-                </div>
+            <div class="heatmap-container" style="margin-top:3em; margin-bottom:3em;">
+                <h4 class="heatmap-title"></h4>
+                <br>
+                <div id="heatmap"></div>
+            </div>
+            <hr>
+            <div class="chart-container" style="margin-top:3em; margin-bottom:3em;">
+                <h4 class="chart-title">Yearly Statistics</h4>
+                <br>
+                <select id="interval-selector" class="form-control">
+                    <option value="year">This Year</option>
+                    <option value="month">This Month</option>
+                    <option value="week">This Week</option>
+                </select>
+                <br>
+                <br>
+                <canvas id="bar-chart"></canvas>
             </div>
         </div>
     </div>
@@ -26,4 +39,5 @@
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='js/progress.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
 {% endblock scripts %}
