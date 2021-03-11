@@ -156,7 +156,7 @@ def calendar():
 @login_required
 def chart(start, end):
     data = get_completed_habit_count_grouped_by_habits(current_user.user_id, start, end)
-    return jsonify(data)
+    return jsonify(create_chart_data(data))
 
 @app.route('/profile')
 @login_required
@@ -175,6 +175,12 @@ def create_calendar_json(data):
         count = data[date_string] if date_string in data else 0
         time_stamp = round(datetime.timestamp(date))
         res[time_stamp] = count
+    return res
+
+def create_chart_data(data):
+    res = {}
+    for habit_id, habit_name, habit_desc, user_id in get_all_habits_for_user(current_user.user_id):
+        res[habit_name] = data[habit_name] if habit_name in data else 0
     return res
 
 if __name__ == '__main__':

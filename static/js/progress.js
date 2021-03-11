@@ -6,7 +6,6 @@ var endDate = null;
 var cellSize = null;
 var chartData = null;
 var calendarData = null;
-var change = true;
 
 function getStartDate() {
     return new Date(new Date().getFullYear(), 0, 1);
@@ -96,7 +95,6 @@ function initDatePicker() {
 }
 
 function getChartData() {
-    console.log('yay');
     if (startDate === null) {
         initDatePicker();
     }
@@ -124,8 +122,8 @@ function updateChart() {
         barChart.destroy();
     }
 
-    let labels = [];
     let data = [];
+    let labels = [];
     for (let name in chartData) {
         labels.push(name);
         data.push(chartData[name]);
