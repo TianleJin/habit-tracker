@@ -152,16 +152,10 @@ def calendar():
     data = get_completed_habits_count_for_user(current_user.user_id)
     return jsonify(create_calendar_json(data))
 
-@app.route('/chart/<period>')
+@app.route('/chart/<start>/<end>')
 @login_required
-def chart(period):
-    day_count = {
-        'year': 365,
-        'month': 30,
-        'week': 7
-    }
-    time_stamp = (datetime.now() - timedelta(days=day_count[period])).timestamp()
-    data = get_completed_habit_count_grouped_by_habits(current_user.user_id, time_stamp)
+def chart(start, end):
+    data = get_completed_habit_count_grouped_by_habits(current_user.user_id, start, end)
     return jsonify(data)
 
 @app.route('/profile')

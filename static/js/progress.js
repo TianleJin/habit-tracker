@@ -1,18 +1,32 @@
 var cal = null;
 var total = null;
 var barChart = null;
-var cellSize = null;
 var startDate = null;
+var endDate = null;
+var cellSize = null;
 var chartData = null;
 var calendarData = null;
-var chartTitle = {
-    'year': 'Yearly Statistics',
-    'month': 'Monthly Statistics',
-    'week': 'Weekly Statistics'
-};
+var change = true;
 
 function getStartDate() {
     return new Date(new Date().getFullYear(), 0, 1);
+}
+
+function formatDate(date) {
+    console.log(date);
+    return `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+}
+
+function stringToDate(dateString) {
+    dateString = dateString.split('/');
+    let mm = parseInt(dateString[0]);
+    let dd = parseInt(dateString[1]);
+    let yyyy = parseInt(dateString[2]);
+    return new Date(yyyy, mm - 1, dd);
+}
+
+function dateToTimestamp(date) {
+    return Math.round(date.getTime() / 1000);
 }
 
 function extractNumerical(value) {
@@ -52,7 +66,6 @@ function getCalendarData() {
 
 function updateHeatMap() {
     cal = new CalHeatMap();
-    startDate = getStartDate();
     cellSize = Math.max(5, getCellSize());
 
     cal.init({ 
@@ -62,7 +75,7 @@ function updateHeatMap() {
         subDomain: "day",
         cellSize: cellSize,
         legendCellSize: cellSize,
-        start: startDate,
+        start: getStartDate(),
         range: 1,
         tooltip: true,
         data: calendarData,
@@ -75,15 +88,28 @@ function updateHeatMap() {
     });
 }
 
+function initDatePicker() {
+    startDate = formatDate(getStartDate());
+    endDate = formatDate(new Date());
+    $('#start').val(startDate);
+    $('#end').val(endDate);
+}
+
 function getChartData() {
-    let interval = document.getElementById('interval-selector').value;
+    console.log('yay');
+    if (startDate === null) {
+        initDatePicker();
+    }
+
+    let startTimestamp = dateToTimestamp(stringToDate(startDate));
+    let endTimestamp = dateToTimestamp(stringToDate(endDate)) + 24 * 60 * 60;
+
     $.ajax({
         type: 'GET',
-        url: `/chart/${interval}`,
+        url: `/chart/${startTimestamp}/${endTimestamp}`,
         dataType: 'json',
         success: function(res) {
             chartData = res;
-            $('.chart-container .chart-title').html(chartTitle[interval]);
             updateChart();
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -133,7 +159,13 @@ function updateChart() {
     });
 }
 
-$('#interval-selector').on('change', function() {
+$('#start').on('change', function() {
+    startDate = $('#start').val();
+    getChartData();
+})
+
+$('#end').on('change', function() {
+    endDate = $('#end').val();
     getChartData();
 })
 
