@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="outer">
+        <div class="inner">
+            <h1>Settings</h1>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <form method="post" action="{{ url_for('update_password') }}" style="background:lavender;padding:1em;">
+                        <h5>Update Password</h5>
+                        <div class="form-group">
+                            <label for="oldPassword">Enter your old password</label>
+                            <input type="password" class="form-control" id="oldPassword" name="oldPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword1">Enter your new password</label>
+                            <input type="password" class="form-control" id="newPassword1" name="newPassword1" data-toggle="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword2">Confirm your new password</label>
+                            <input type="password" class="form-control" id="newPassword2" name="newPassword2" data-toggle="password">
+                        </div>
+                        <button type="submit" class="btn btn-danger">Update</button>
+                    </form>
+                </div>
+                <div class="col">
+                    <form method="post" action="{{ url_for('delete_account') }}" style="background:lavender;padding:1em;">
+                        <h5>Delete Account</h5>
+                        <div class="form-group">
+                            <label for="yourPassword">Enter your password to proceed</label>
+                            <input type="password" class="form-control" id="yourPassword" name="yourPassword">
+                        </div>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

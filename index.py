@@ -22,6 +22,7 @@ app.secret_key = os.environ['HABIT_TRACKER_SECRET_KEY']
 
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
+login_manager.login_message_category = "danger"
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -158,10 +159,18 @@ def chart(start, end):
     data = get_completed_habit_count_grouped_by_habits(current_user.user_id, start, end)
     return jsonify(create_chart_data(data))
 
-@app.route('/profile')
+@app.route('/setting')
 @login_required
-def profile():
-    return render_template('profile.html')
+def setting():
+    return render_template('setting.html', title='Setting')
+
+@app.route('/password/update', methods=['POST'])
+def update_password():
+    return render_template('setting.html', title='Setting')
+
+@app.route('/account/delete', methods=['POST'])
+def delete_account():
+    return render_template('setting.html', title='Setting')
 
 def create_calendar_json(data):
     today = datetime.now()
