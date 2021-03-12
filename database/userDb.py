@@ -41,3 +41,33 @@ def insert_user_into_db(username, password_hash):
         except:
             conn.rollback()
             return False
+
+def update_password_by_id(user_id, password_hash):
+    if not table_exist():
+        return False
+    
+    with sqlite3.connect(path) as conn:
+        conn.execute("PRAGMA foreign_keys = 1;")
+        try:
+            curs = conn.cursor()
+            curs.execute(f'UPDATE {table} SET password = ? WHERE user_id = ?;', (password_hash, user_id))
+            conn.commit()
+            return True
+        except:
+            conn.rollback()
+            return False
+
+def delete_user_by_id(user_id):
+    if not table_exist():
+        return False
+
+    with sqlite3.connect(path) as conn:
+        conn.execute("PRAGMA foreign_keys = 1;")
+        try:
+            curs = conn.cursor()
+            curs.execute(f'DELETE FROM {table} WHERE user_id = ?;', (user_id, ))
+            conn.commit()
+            return True
+        except:
+            conn.rollback()
+            return False

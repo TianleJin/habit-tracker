@@ -7,7 +7,7 @@ from flask import render_template, redirect, url_for, make_response, jsonify, re
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from database.userDb import get_user_by_id, get_user_by_username, insert_user_into_db
+from database.userDb import get_user_by_id, get_user_by_username, insert_user_into_db, update_password_by_id, delete_user_by_id
 from database.habitDb import get_all_habits_for_user, insert_habit_for_user, delete_habit_for_user, update_habit_for_user
 from database.recordDb import (get_all_records_for_user, get_completed_habits_count_for_user, check_record_exists, insert_record_for_habit, 
 update_record_for_habit, get_completed_habit_count_grouped_by_habits)
@@ -15,6 +15,8 @@ update_record_for_habit, get_completed_habit_count_grouped_by_habits)
 from models.loginForm import LoginForm
 from models.registrationForm import RegistrationForm
 from models.habitForm import HabitForm
+from models.updatePasswordForm import UpdatePasswordForm
+from models.deleteAccountForm import DeletePasswordForm
 from models.user import User
 
 app = Flask(__name__)
@@ -44,7 +46,7 @@ def login():
         if res is False:
             flash('A server error has occurred.', category='danger')
         else:
-            res = list(get_user_by_username(form.username.data))
+            res = list(res)
             user = load_user(res[0])
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
@@ -159,18 +161,42 @@ def chart(start, end):
     data = get_completed_habit_count_grouped_by_habits(current_user.user_id, start, end)
     return jsonify(create_chart_data(data))
 
-@app.route('/setting')
+@app.route('/setting', methods=['GET', 'POST'])
 @login_required
 def setting():
-    return render_template('setting.html', title='Setting')
+    form1 = UpdatePasswordForm()
+    form2 = DeletePasswordForm()
 
-@app.route('/password/update', methods=['POST'])
-def update_password():
-    return render_template('setting.html', title='Setting')
-
-@app.route('/account/delete', methods=['POST'])
-def delete_account():
-    return render_template('setting.html', title='Setting')
+    if form1.submit.data and form1.validate():
+        res = get_user_by_id(current_user.user_id)
+        if res is False:
+            flash('A server error has occurred.', category='danger')
+        else:
+            res = list(res)
+            user = load_user(res[0])
+            if not check_password_hash(user.password, form1.oldPassword.data):
+                flash('Your old password is incorrect.', category='danger')
+            elif update_password_by_id(current_user.user_id, generate_password_hash(form1.newPassword1.data, 'sha256')):
+                flash('Your password has been updated.', category='success')
+            else:
+                flash('A server error has occurred.', category='danger')
+    
+    if form2.delete.data and form2.validate():
+        res = get_user_by_id(current_user.user_id)
+        if res is False:
+            flash('A server error has occurred.', category='danger')
+        else:
+            res = list(res)
+            user = load_user(res[0])
+            if not check_password_hash(user.password, form2.password.data):
+                flash('Your password is incorrect.', category='danger')
+            elif delete_user_by_id(current_user.user_id):
+                flash('Your account has been deactivated.', category='success')
+                logout_user()
+                return redirect(url_for('login'))
+            else:
+                flash('A server error has occurred.', category='danger')
+    return render_template('setting.html', title='Setting', form1=form1, form2=form2)
 
 def create_calendar_json(data):
     today = datetime.now()

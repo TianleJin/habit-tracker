@@ -28,7 +28,7 @@
             <div class="form-group">
                 {% if form.password.errors %}
                     {{ form.password(class="form-control form-control-lg is-invalid", placeholder="Your password", data_toggle="password") }}
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback" style="display:block;">
                         {{ form.password.errors[0] }}
                     </div>
                 {% else %}  
@@ -38,7 +38,7 @@
             <div class="form-group">
                 {% if form.confirm.errors %}
                     {{ form.confirm(class="form-control form-control-lg is-invalid", placeholder="Confirm password", data_toggle="password") }}
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback" style="display:block;">
                         {{ form.confirm.errors[0] }}
                     </div>
                 {% else %}  
