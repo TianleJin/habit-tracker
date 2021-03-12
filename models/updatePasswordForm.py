@@ -11,4 +11,4 @@ class UpdatePasswordForm(FlaskForm):
         EqualTo('newPassword2', message='Your new passwords do not match.')
     ])
     newPassword2 = PasswordField('newPassword2', validators=[DataRequired()])
-    submit = SubmitField('Update')
+    submit = SubmitField('Confirm')
