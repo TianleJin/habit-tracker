@@ -25,3 +25,16 @@
 .submit-btn:focus {
     background-color: blueviolet;
 }
+
+.info-btn {
+    width:20px;
+    height:20px;
+    padding:3px;
+    font-size:12px;
+    line-height:12px;
+    margin-bottom:2px;
+    border-radius:50%;
+    background:mediumpurple;
+    color:white;
+    font-weight:600;
+}

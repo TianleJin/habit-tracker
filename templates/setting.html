@@ -46,7 +46,7 @@
                             </div>
                         </fieldset>
                         <div class="form-group">
-                            {{ form1.submit(class="btn btn-danger", style="width:30%;border-radius:25px;") }}
+                            {{ form1.submit(class="btn btn-danger", style="width:30%;border-radius:25px;", data_toggle="tooltip", data_placement="bottom", title="Make sure to remember your new password!") }}
                         </div>
                     </form>
                 </div>
@@ -69,7 +69,7 @@
                             </div>
                         </fieldset>
                         <div class="form-group">
-                            {{ form2.delete(class="btn btn-danger", style="width:30%;border-radius:25px;") }}
+                            {{ form2.delete(class="btn btn-danger", style="width:30%;border-radius:25px;", data_toggle="tooltip", data_placement="bottom", title="Proceed with caution as this action is permanent!") }}
                         </div>
                     </form>
                 </div>
@@ -77,3 +77,12 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+{% endblock scripts %}

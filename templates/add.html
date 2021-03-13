@@ -9,29 +9,35 @@
 <div class="outer">
     <form class="inner" action="{{ url_for('add') }}" method="post">
         {{ form.hidden_tag() }}
-        <fieldset class="form-group"> 
+        <fieldset class="form-group">
             <h1>Add Habit</h1>
             <hr>
             <div class="form-group">
-                {{ form.name.label }}
+                <label for="habit-name">
+                    Name
+                    <button type="button" class="btn info-btn" data-toggle="tooltip" data-placement="bottom" title="This is used to display your habit on all pages. (max 15 characters)">?</button>
+                </label>
                 {% if form.name.errors %}
-                    {{ form.name(class="form-control form-control-lg is-invalid", placeholder="Enter habit name") }}
+                    {{ form.name(id="habit-name", class="form-control form-control-lg is-invalid", placeholder="Enter habit name") }}
                     <div class="invalid-feedback">
                         {{ form.name.errors[0] }}
                     </div>
                 {% else %}  
-                    {{ form.name(class="form-control form-control-lg", placeholder="Habit name")}}
+                    {{ form.name(id="habit-name", class="form-control form-control-lg", placeholder="Habit name")}}
                 {% endif %}
             </div>
             <div class="form-group">
-                {{ form.description.label }}
+                <label for="habit-desc">
+                    Description
+                    <button type="button" class="btn info-btn" data-toggle="tooltip" data-placement="bottom" title="This is used to remind you about the details of your habit. (max 50 characters)">?</button>
+                </label>
                 {% if form.description.errors %}
-                    {{ form.description(rows="4", class="form-control form-control-lg is-invalid", placeholder="Habit description") }}
+                    {{ form.description(id="habit-desc", rows="4", class="form-control form-control-lg is-invalid", placeholder="Habit description") }}
                     <div class="invalid-feedback">
                         {{ form.description.errors[0] }}
                     </div>
                 {% else %}  
-                    {{ form.description(rows="4", class="form-control form-control-lg", placeholder="Habit description")}}
+                    {{ form.description(id="habit-desc", rows="4", class="form-control form-control-lg", placeholder="Habit description")}}
                 {% endif %}
             </div>
         </fieldset>
@@ -41,3 +47,12 @@
     </form>
 </div>
 {% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+{% endblock scripts %}
