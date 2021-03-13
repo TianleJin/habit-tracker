@@ -26,12 +26,12 @@
             <div class="form-group">
                 {{ form.description.label }}
                 {% if form.description.errors %}
-                    {{ form.description(class="form-control form-control-lg is-invalid", placeholder="Habit description") }}
+                    {{ form.description(rows="4", class="form-control form-control-lg is-invalid", placeholder="Habit description") }}
                     <div class="invalid-feedback">
                         {{ form.description.errors[0] }}
                     </div>
                 {% else %}  
-                    {{ form.description(class="form-control form-control-lg", placeholder="Habit description")}}
+                    {{ form.description(rows="4", class="form-control form-control-lg", placeholder="Habit description")}}
                 {% endif %}
             </div>
         </fieldset>

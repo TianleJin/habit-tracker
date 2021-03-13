@@ -1,9 +1,9 @@
 var cal = null;
 var total = null;
+var cellSize = null;
 var barChart = null;
 var startDate = null;
 var endDate = null;
-var cellSize = null;
 var chartData = null;
 var calendarData = null;
 
@@ -12,16 +12,15 @@ function getStartDate() {
 }
 
 function formatDate(date) {
-    console.log(date);
     return `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
 }
 
 function stringToDate(dateString) {
     dateString = dateString.split('/');
-    let mm = parseInt(dateString[0]);
+    let mm = parseInt(dateString[0]) - 1;
     let dd = parseInt(dateString[1]);
     let yyyy = parseInt(dateString[2]);
-    return new Date(yyyy, mm - 1, dd);
+    return new Date(yyyy, mm, dd);
 }
 
 function dateToTimestamp(date) {
@@ -40,6 +39,23 @@ function getInnerDivWidth() {
 
 function getCellSize() {
     return (getInnerDivWidth() - 104) / 53; 
+}
+
+function getLegendScale(data) {
+    let max_freq = 0;
+    for (let timestamp in data) {
+        max_freq = Math.max(max_freq, data[timestamp]);
+    }
+
+    if (max_freq < 5) {
+        return [1, 2, 3, 4];
+    }
+    
+    let scale = [];
+    for (let i = 1; i < 5; i++) {
+        scale.push(Math.round(i / 5 * max_freq));
+    }
+    return scale;
 }
 
 function getCalendarData() {
@@ -83,7 +99,7 @@ function updateHeatMap() {
             max: "#833AB4",
             empty: "lavender"
         },
-        legend: [1, 2, 3, 4]
+        legend: getLegendScale(calendarData)
     });
 }
 
