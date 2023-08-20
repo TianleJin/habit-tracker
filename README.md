@@ -1,4 +1,4 @@
-# Habit-Tracker
+# Habit Tracker
 A flask application which intends to help users develop their habits.
 
 # Dependencies
